@@ -3,6 +3,11 @@
 i made this as a weekend project, and as of now i haev finished up the mnist digit recognizer, it is built from scratch using numpy because i want to apply myself. 
 if anyone sees this my code is not a good example of what good programming looks like. I have no naming conventions and organization is shit.
 
+# DEPENDENCIES:
+scikit for the mnist database
+pandas or something because its apparently needed to import the scikit database
+numpy obviously
+
 ### the main network is mnistRecog.py
 
 it loads the parameters from mnist_recog_params.npz, (a numpy file containing ndarrays of all the weights and biases) make sure to keep the
@@ -26,3 +31,4 @@ np files will overwrite eachother.
 
 #this is NOT MADE BY AI 
 no point in me doing this if i used ai
+
