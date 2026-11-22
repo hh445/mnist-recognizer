@@ -8,6 +8,8 @@ scikit for the mnist database
 pandas or something because its apparently needed to import the scikit database
 numpy obviously
 
+# the network itself
+
 ### the main network is mnistRecog.py
 
 it loads the parameters from mnist_recog_params.npz, (a numpy file containing ndarrays of all the weights and biases) make sure to keep the
