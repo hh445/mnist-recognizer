@@ -1,10 +1,21 @@
 import numpy as np
+from sklearn.datasets import fetch_openml
+
+#i program sparsely between like 3 languages so i dont really know naming conventions for each specific lang and i dont program often so my code might be messy or unorganiazed please ignore
+mnist = fetch_openml('mnist_784',version =1,as_frame=False,parser='liac-arff') #importing mnist datasett
+data = np.transpose(mnist.data)/255.0
+ref = np.transpose(np.eye(10)[mnist.target.astype(int)])
+
 rng = np.random.default_rng()
 
 #by gan
 
 layers = [784,128,64,10]
-learning_rate = 0.001
+LEARNING_RATE = 0.01
+BATCH_SIZE = 100
+TRAINING_EPOCHS = 15
+DATA_SIZE = 60000 #TRY TO MAKE IT SO THAT DATA_SIZE IS DIVISIBLE BY BATCH SIZE
+
 
 #since this neural net is using relu, so the outputs are numbers which arent contained by any activation function. softmax compresses it into probabilities that sum up to 1, depending on their difference. More positive closer to 1, basically more likely to be that choice
 def softmax(z):
@@ -41,25 +52,79 @@ def forwardFeed(input):
 
 #sm is the softmax output from the neural network, while ref is the one hot coded reference to the correct answer
 def backprop(sm,ref,activ):
-    backcarry = [(x - y)  for x,y in zip(sm,ref)] #the rates of change in respect oteh loss of the olutput logits. This will be used to propogate backwards
+    backcarry = sm - ref #the rates of change in respect oteh loss of the olutput logits. This will be used to propogate backwards
     weightGrad = []
     biasGrad = []
     for x,y in zip(reversed(weights),reversed(activ)):
         #here is where i pull the gradients (yet to be implemented)
-        weightGrad.append(np.dot(backcarry,np.transpose(y))) #the gradients is the product of the matrix multiplication between the column vector of the back carry and the row vector of the previous layer activations. I will explain elsewhere too little space in this comment.
+        weightGrad.append(np.dot(backcarry,y.reshape(1,-1))) #the gradients is the product of the matrix multiplication between the column vector of the back carry and the row vector of the previous layer activations. I will explain elsewhere too little space in this comment.
         biasGrad.append(backcarry) #the gradient of the bias is just the backcarry because derivative of a variable by itself is one.
         backcarry = np.dot(np.transpose(x),backcarry)*(y > 0)  #pass back the gradients of the neurons in respect othe loss function. This is the part of "back propogation" Again i will explain this in more depth elsewhere
     return weightGrad[::-1], biasGrad[::-1]
 
+def gradientDescent(data,rate,batch_size): #the parameter data is zipped in a tuple of (x,y) where x is the actual image and y is the correct answer #rate is the learning rate (the multiplier at whic hteh gradient will be multiplied by)
+    gradWeight= [np.zeros((y,x)) for x,y in zip(layers[:-1],layers[1:])]
+    gradBias = [np.zeros((x,1)) for x in layers[1:]]
+    count = 0
+    for x,y in data:
+        sftmx,activations = forwardFeed(x)
+        is_max = (sftmx == sftmx.max())
+        out = sftmx.copy()
+        out[is_max] = 1
+        out[~is_max]=0
+        if np.array_equal(out,y):
+            count += 1
+        deltaW, deltaB = backprop(sftmx,y,activations)
+        for i in range (len(weights)):
+            gradWeight[i] += deltaW[i]/batch_size
+            gradBias[i] += deltaB[i]/batch_size
+    for i in range(len(weights)): #the actual part where the weights and biases are tweaked
+        weights[i] -= rate*gradWeight[i] #gradient descent
+        biases[i] -= rate*gradBias[i]  #gradient descent
+    return count
 
 
-        
+#the actual training goes on down here
+
+training_accuracy =[]
+for j in range(TRAINING_EPOCHS): 
+    startingNum = 0
+    correctCount = 0
+    shufflePerm = rng.permutation(DATA_SIZE) #makes it so every epoch goes through the data differently
+    for k in range(round(DATA_SIZE/BATCH_SIZE)): #training the network
+        training_data = []
+        ref_data = []
+        for i in range(BATCH_SIZE):
+            index = shufflePerm[startingNum + i] #the shuffled index
+            training_data.append(data[:,index:index+1])
+            ref_data.append(ref[:,index : index+1])
+        startingNum += BATCH_SIZE
+        correctCount += gradientDescent(zip(training_data,ref_data),LEARNING_RATE,BATCH_SIZE) #where the gradient descent happens (all the fluff on top is just to sort data and input it in)
+        if (k+1) % 100 == 0:
+             print("step: " + str(k+1))
+    training_accuracy.append(correctCount/DATA_SIZE)
+    print("epoch: " + str(j+1))
+    print("accuracy: " + str(correctCount/DATA_SIZE))
+
+testCount = 0
+for i in range(10000): #mnist has 70k in total, so the last 10k is used as testing data. training data uses the first 60k (atlaest thats how they do it usually)
+    out, active = forwardFeed(data[:, i + DATA_SIZE: i + DATA_SIZE + 1])
+    is_max = (out == out.max())
+    out[is_max] = 1
+    out[~is_max] = 0
+    if np.array_equal(out, ref[:, i + DATA_SIZE: i+ DATA_SIZE + 1]):
+        testCount+= 1
+print("TEST ACCURACY: " + str(testCount/10000))
+np.savez('mnist_recog_params.npz',
+         **{f'W{i}': w for i, w in enumerate(weights)},
+         **{f'b{i}': b for i, b in enumerate(biases)}
+         )
+
+    
 
 
 
-sm, active = forwardFeed( rng.random((784,1)))
-#print(sm)
-print(backprop(sm,[0,0,0,0,1,0,0,0,0,0],active))
+
 
 
 
