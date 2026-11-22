@@ -23,3 +23,6 @@ Then the program will save all the parameters into the file mnist_recog_params.n
 np files will overwrite eachother.
 
 ##its pretty cool. Deterministic algorithms can decipher the randomness of human input. cool ai math
+
+#this is NOT MADE BY AI 
+no point in me doing this if i used ai
