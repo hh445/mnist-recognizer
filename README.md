@@ -1,11 +1,13 @@
-# very-inefficient-machine-learning
+# mnist-recognizer
 
 i made this as a weekend project, and as of now i haev finished up the mnist digit recognizer, it is built from scratch using numpy because i want to apply myself. 
-if anyone sees this my code is not a good example of what good programming looks like. I have no naming conventions and organization is shit.
+if anyone sees this my code is not a good example of what good programming looks like. I have no naming conventions and organization is bad.
 
 # DEPENDENCIES:
 scikit for the mnist database
+
 pandas or something because its apparently needed to import the scikit database
+
 numpy obviously
 
 # the network itself
@@ -24,13 +26,21 @@ oh yea and running mnistRecog.py pulls a random handwritten digit from the mnist
 
 ### neuralnetOne.py is where you can train the network
 
-neuralnetOne.py has all the code for training the network itself using gradientDescent. you can edit all the parameters on the top, such as the batch size or how many training epochs or whatever.
+neuralnetOne.py has all the code for training the network itself using gradient descent. you can edit all the parameters on the top, such as the batch size or how many training epochs or whatever.
 to train a network, running neuralnetOne.py will initialize random weights using Kaiming He initialization (some chinese ai engineer), and run through the first 60k handwritten digits however many epochs it is configured to train to.
 Then the program will save all the parameters into the file mnist_recog_params.npz. If you want ot keep multiple files once you run neuralnetOne.py once rename the file before running it again because if the namings are the same the saved
 np files will overwrite eachother.
 
-##its pretty cool. Deterministic algorithms can decipher the randomness of human input. cool ai math
+## its pretty cool. Deterministic algorithms can decipher the randomness of human input. cool ai math
+
+# Resources:
+https://www.youtube.com/watch?v=aircAruvnKk
+https://www.youtube.com/watch?v=IHZwWFHWa-w
+https://visionbook.mit.edu/backpropagation.html
+
 
 #this is NOT MADE BY AI 
 no point in me doing this if i used ai
+
+
 
