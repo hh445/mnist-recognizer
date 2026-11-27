@@ -8,7 +8,6 @@ ref = np.transpose(np.eye(10)[mnist.target.astype(int)])
 
 rng = np.random.default_rng()
 
-#by gan
 
 layers = [784,128,64,10]
 LEARNING_RATE = 0.01
