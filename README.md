@@ -1,14 +1,17 @@
 # mnist-recognizer
 
 i made this as a weekend project, and as of now i haev finished up the mnist digit recognizer, it is built from scratch using numpy because i want to apply myself. 
-if anyone sees this my code is not a good example of what good programming looks like. I have no naming conventions and organization is bad.
-
+Code isnt very organized, as I kind of rushed it and its just a weekend project. Ill clean it up later. Naming convention inside the code is non existent.
 # DEPENDENCIES:
-scikit for the mnist database
+install scikit to import the mnist database
+### pip install scikit-learn
+install pandas
+### pip install pandas
+just to plot out the hand written digits
+### pip install matplotlib
+install numpy as well
+### pip install numpy
 
-pandas or something because its apparently needed to import the scikit database
-
-numpy obviously
 
 # the network itself
 
@@ -37,10 +40,7 @@ np files will overwrite eachother.
 https://www.youtube.com/watch?v=aircAruvnKk
 https://www.youtube.com/watch?v=IHZwWFHWa-w
 https://visionbook.mit.edu/backpropagation.html
-
-
-#this is NOT MADE BY AI 
-no point in me doing this if i used ai
+## no ai is used to create this.
 
 
 
